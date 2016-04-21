@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js – The HTML Presentation Framework</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+          <h2>What's a Stream?</h2>
+          <h3>"Real Time" Systems, Data Streams, and Examples</h3>
+          <img src="img/seglo.jpg" style="height:130px;border:0;box-shadow: none;margin: 0;background: none;" />
+          <p>
+              <small>Presented by <a href="http://seanglover.com/">Sean Glover</a> / <a href="http://twitter.com/randonom">@randonom</a></small>
+          </p>
+				</section>
+
+				<section>
+					<h2>How do you define a real-time system?</h2>
+
+          <div style="position:relative; width:100%; height:480px; margin:0 auto;font-size:30pt">
+            <div width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;">
+              A real-time system is one that must process information and produce a response within a specified time, else risk severe consequences, including failure. That is, in a system with a real-time constraint it is no good to have the correct action or the correct answer after a certain deadline: <u>it is either by the deadline or it is useless!</u>
+            </div>
+            <div class="fragment" width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;">
+              Any system in which the time at which output is produced is significant. This is usually because the input corresponds to some event in the physical world, and the output has to relate to that same event. <u>The lag from input time to output time must be sufficiently small for acceptable timeliness.</u><br/><br/>
+              <i>The Oxford Dictionary of Computing</i>
+            </div>
+            <div class="fragment" width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;">
+              Any information processing activity or system which has to respond to externally generated input stimuli within a finite and specified period.<br/><br/>
+              <i>Young, S. (1982). Real Time Languages: Design and Development</i>
+            </div>
+          </div>
+          <aside data-markdown class="notes">
+          Ambiguous meanings.
+
+          Failure consequences.
+
+          External events.
+
+          Within a specified time period.
+          </aside>
+				</section>
+
+        <section>
+          <h2>Classification of real-time systems</h2>
+
+          <table style="font-size:14pt;">
+          <tr><td><b>Classification</b></td><td><b>Examples</b></td><td><b>Latency Measured In</b></td><td><b>Tolerance for Delay</b></td></tr>
+          <tr class="fragment"><td>Hard</td><td>Pacemaker, Anti-lock brakes</td><td>microseconds to milliseconds</td><td>None - total system failure, potential loss of life</td>
+          <tr class="fragment"><td>Soft</td><td>Airline Reservation System, Online Stock Quotes, VoIP</td><td>milliseconds to seconds</td><td>Low - no system failure, no life at risk</td></tr>
+          <tr class="fragment"><td>Near</td><td>Hangouts video, home automation</td><td>seconds to minutes</td><td>High - no system failure, no life at risk </td></tr>
+          </table>
+          <aside data-markdown class="notes">
+          Hard - Human rated (Elevators.  Space shuttle)
+          Consequence: Total failure.
+
+          Soft - Speed over accuracy.
+          Consequence: Tolerate transient errors.
+
+          Near - Current events are current.
+          Consequence: Get it right eventually.
+          </aside>
+        </section>
+
+        <section>
+          <h2>What is a data stream?</h2>
+
+          <div style="position:relative; width:100%; height:480px; margin:0 auto;font-size:30pt">
+            <div class="fragment" width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;">
+              <p>A stream of data can be thought of as a sequence of data that is too large to fit in memory (or in a cache, on disk, or in a database, etc)</p>
+
+              <p>This could include applications such as:</p>
+              <ul>
+                <li>Network traffic</li>
+                <li>User events</li>
+                <li>Database transactions</li>
+                <li>Sensor data</li>
+              </ul>
+            </div>
+            <div class="fragment" width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;">
+              A data stream is a very long input stream σ.  This is formalized as a sequence <i>σ</i> = {a1, a2,  ..., a<i>m</i>}, where the elements of the sequence are drawn from the universe [n] := {1, 2, ...,<i>n</i>}.  Note the two important size parameters: the stream length, <i>m</i>, and the universe size, <i>n</i>.  The goal is to process the stream using a small amount of space <i>s</i>.  Since m and n are to be though of as "huge", we want to make <i>s</i> as small as possible. 
+            </div>
+            <div class="fragment" width="100%" height="480px" style="position:absolute;top:0;left:0;background:white;height:480px;color:grey;">
+              A data stream is a <span style="color:black">very long</span> input stream σ.  This is formalized as a <span style="color:black">sequence</span> <i>σ</i> = {a1, a2,  ..., a<i>m</i>}, where the elements of the sequence are drawn from the universe [n] := {1, 2, ...,<i>n</i>}.  Note the two important size parameters: the stream length, <i>m</i>, and the universe size, <i>n</i>.  The goal is to <span style="color:black">process the stream</span> using a small amount of space <i>s</i>.  Since m and n are to be though of as "huge", we want to <span style="color:black">make <i>s</i> as small as possible</span>. 
+            </div>
+          </div>
+          <aside data-markdown class="notes">
+          Basic definition: too much data to load into memory at one time.
+          "Trying to eat an elephant"
+
+          Examples all around us
+
+          Formal definition: [read def]
+
+          Formal definition keywords
+
+          very long/or infinite
+          Processing
+          Results are as small as possible
+          </aside>
+        </section>
+
+        <section>
+          <h2>Streaming Platform: Recreating Twitter</h2>
+
+          recreate diagram in gliffy
+        </section>
+
+        <section>
+          <h2>Streaming algos used in our platform?</h2>
+        </section>
+
+        <section>
+          <h2>Live coding - twitter</h2>
+
+          scala app
+        </section>
+
+        <section>
+          <h2>References</h2>
+        </section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
